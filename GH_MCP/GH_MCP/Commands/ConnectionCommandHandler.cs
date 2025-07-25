@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using GrasshopperMCP.Models;
-using GH_MCP.Models;
 using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using Rhino;
-using Newtonsoft.Json;
 using GH_MCP.Utils;
 
 namespace GH_MCP.Commands
@@ -190,11 +187,11 @@ namespace GH_MCP.Commands
 
                     // 連接參數
                     targetParameter.AddSource(sourceParameter);
-                    
+
                     // 刷新數據
                     targetParameter.CollectData();
                     targetParameter.ComputeData();
-                    
+
                     // 刷新畫布
                     doc.NewSolution(false);
 
@@ -249,25 +246,25 @@ namespace GH_MCP.Commands
             {
                 return param;
             }
-            
+
             // 處理一般組件
             if (docObj is IGH_Component component)
             {
                 // 獲取參數集合
                 IList<IGH_Param> parameters = isInput ? component.Params.Input : component.Params.Output;
-                
+
                 // 檢查參數集合是否為空
                 if (parameters == null || parameters.Count == 0)
                 {
                     return null;
                 }
-                
+
                 // 如果只有一個參數，直接返回（只有在未指定名稱或索引時）
                 if (parameters.Count == 1 && string.IsNullOrEmpty(connection.ParameterName) && !connection.ParameterIndex.HasValue)
                 {
                     return parameters[0];
                 }
-                
+
                 // 按名稱查找參數
                 if (!string.IsNullOrEmpty(connection.ParameterName))
                 {
@@ -279,7 +276,7 @@ namespace GH_MCP.Commands
                             return p;
                         }
                     }
-                    
+
                     // 模糊匹配
                     foreach (var p in parameters)
                     {
@@ -298,7 +295,7 @@ namespace GH_MCP.Commands
                         }
                     }
                 }
-                
+
                 // 按索引查找參數
                 if (connection.ParameterIndex.HasValue)
                 {
@@ -309,7 +306,7 @@ namespace GH_MCP.Commands
                     }
                 }
             }
-            
+
             return null;
         }
 
@@ -330,15 +327,15 @@ namespace GH_MCP.Commands
             // 檢查數據類型是否兼容
             var sourceType = source.Type;
             var targetType = target.Type;
-            
+
             // 記錄參數類型信息，用於調試
             RhinoApp.WriteLine($"Parameter types: source={sourceType.Name}, target={targetType.Name}");
             RhinoApp.WriteLine($"Parameter names: source={source.Name}, target={target.Name}");
-            
+
             // 檢查數字類型的兼容性
             bool isSourceNumeric = IsNumericType(source);
             bool isTargetNumeric = IsNumericType(target);
-            
+
             if (isSourceNumeric && isTargetNumeric)
             {
                 return true;
@@ -370,27 +367,27 @@ namespace GH_MCP.Commands
             // 獲取參數所屬的組件
             var sourceDoc = source.OnPingDocument();
             var targetDoc = target.OnPingDocument();
-            
+
             if (sourceDoc != null && targetDoc != null)
             {
                 // 嘗試查找參數所屬的組件
                 IGH_Component sourceComponent = FindComponentForParam(sourceDoc, source);
                 IGH_Component targetComponent = FindComponentForParam(targetDoc, target);
-                
+
                 // 如果找到了源組件和目標組件
                 if (sourceComponent != null && targetComponent != null)
                 {
                     // 記錄組件信息，用於調試
                     RhinoApp.WriteLine($"Components: source={sourceComponent.Name}, target={targetComponent.Name}");
                     RhinoApp.WriteLine($"Component GUIDs: source={sourceComponent.ComponentGuid}, target={targetComponent.ComponentGuid}");
-                    
+
                     // 特殊處理平面到幾何元件的連接
                     if (IsPlaneComponent(sourceComponent) && RequiresPlaneInput(targetComponent))
                     {
                         RhinoApp.WriteLine("Connecting plane component to geometry component that requires plane input");
                         return true;
                     }
-                    
+
                     // 如果源是滑塊且目標是圓，確保目標是創建圓的組件
                     if (sourceComponent.Name.Contains("Number") && targetComponent.Name.Contains("Circle"))
                     {
@@ -407,7 +404,7 @@ namespace GH_MCP.Commands
                             return true;
                         }
                     }
-                    
+
                     // 如果源是平面且目標是立方體，允許連接
                     if (IsPlaneComponent(sourceComponent) && targetComponent.Name.Contains("Box"))
                     {
@@ -428,8 +425,8 @@ namespace GH_MCP.Commands
         /// <returns>是否為數字類型</returns>
         private static bool IsNumericType(IGH_Param param)
         {
-            return param is Param_Integer || 
-                   param is Param_Number || 
+            return param is Param_Integer ||
+                   param is Param_Number ||
                    param is Param_Time;
         }
 
@@ -453,7 +450,7 @@ namespace GH_MCP.Commands
                             return comp;
                         }
                     }
-                    
+
                     // 檢查輸入參數
                     foreach (var inParam in comp.Params.Input)
                     {
@@ -464,10 +461,10 @@ namespace GH_MCP.Commands
                     }
                 }
             }
-            
+
             return null;
         }
-        
+
         /// <summary>
         /// 檢查組件是否為平面組件
         /// </summary>
@@ -477,19 +474,19 @@ namespace GH_MCP.Commands
         {
             if (component == null)
                 return false;
-                
+
             // 檢查組件名稱
             string name = component.Name.ToLowerInvariant();
             if (name.Contains("plane"))
                 return true;
-                
+
             // 檢查 XY Plane 組件的 GUID
             if (component.ComponentGuid.ToString() == "896a1e5e-c2ac-4996-a6d8-5b61157080b3")
                 return true;
-                
+
             return false;
         }
-        
+
         /// <summary>
         /// 檢查組件是否需要平面輸入
         /// </summary>
@@ -499,7 +496,7 @@ namespace GH_MCP.Commands
         {
             if (component == null)
                 return false;
-                
+
             // 檢查組件是否有名為 "Plane" 或 "Base" 的輸入參數
             foreach (var param in component.Params.Input)
             {
@@ -507,13 +504,13 @@ namespace GH_MCP.Commands
                 if (paramName.Contains("plane") || paramName.Contains("base"))
                     return true;
             }
-            
+
             // 檢查特定類型的組件
             string name = component.Name.ToLowerInvariant();
-            return name.Contains("box") || 
-                   name.Contains("rectangle") || 
-                   name.Contains("circle") || 
-                   name.Contains("cylinder") || 
+            return name.Contains("box") ||
+                   name.Contains("rectangle") ||
+                   name.Contains("circle") ||
+                   name.Contains("cylinder") ||
                    name.Contains("cone");
         }
     }

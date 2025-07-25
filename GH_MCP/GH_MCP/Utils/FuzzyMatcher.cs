@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GH_MCP.Utils
 {
@@ -48,7 +46,7 @@ namespace GH_MCP.Utils
             { "curve", "Curve" },
             { "crv", "Curve" }
         };
-        
+
         // 參數名稱映射字典，將常用的簡化參數名稱映射到實際的 Grasshopper 參數名稱
         private static readonly Dictionary<string, string> ParameterNameMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -90,7 +88,7 @@ namespace GH_MCP.Utils
             { "geo", "Geometry" },
             { "brep", "Brep" }
         };
-        
+
         /// <summary>
         /// 獲取最接近的元件名稱
         /// </summary>
@@ -100,16 +98,16 @@ namespace GH_MCP.Utils
         {
             if (string.IsNullOrWhiteSpace(input))
                 return input;
-                
+
             // 嘗試直接映射
             string normalizedInput = input.ToLowerInvariant().Replace(" ", "").Replace("_", "");
             if (ComponentNameMap.TryGetValue(normalizedInput, out string mappedName))
                 return mappedName;
-                
+
             // 如果沒有直接映射，返回原始輸入
             return input;
         }
-        
+
         /// <summary>
         /// 獲取最接近的參數名稱
         /// </summary>
@@ -119,16 +117,16 @@ namespace GH_MCP.Utils
         {
             if (string.IsNullOrWhiteSpace(input))
                 return input;
-                
+
             // 嘗試直接映射
             string normalizedInput = input.ToLowerInvariant().Replace(" ", "").Replace("_", "");
             if (ParameterNameMap.TryGetValue(normalizedInput, out string mappedName))
                 return mappedName;
-                
+
             // 如果沒有直接映射，返回原始輸入
             return input;
         }
-        
+
         /// <summary>
         /// 從列表中找到最接近的字符串
         /// </summary>
@@ -139,26 +137,26 @@ namespace GH_MCP.Utils
         {
             if (string.IsNullOrWhiteSpace(input) || candidates == null || !candidates.Any())
                 return input;
-                
+
             // 首先嘗試精確匹配
             var exactMatch = candidates.FirstOrDefault(c => string.Equals(c, input, StringComparison.OrdinalIgnoreCase));
             if (exactMatch != null)
                 return exactMatch;
-                
+
             // 嘗試包含匹配
             var containsMatches = candidates.Where(c => c.IndexOf(input, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
             if (containsMatches.Count == 1)
                 return containsMatches[0];
-                
+
             // 嘗試前綴匹配
             var prefixMatches = candidates.Where(c => c.StartsWith(input, StringComparison.OrdinalIgnoreCase)).ToList();
             if (prefixMatches.Count == 1)
                 return prefixMatches[0];
-                
+
             // 如果有多個匹配，返回最短的一個
             if (containsMatches.Any())
                 return containsMatches.OrderBy(c => c.Length).First();
-                
+
             // 如果沒有匹配，返回原始輸入
             return input;
         }

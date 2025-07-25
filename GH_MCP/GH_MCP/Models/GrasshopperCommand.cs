@@ -46,7 +46,7 @@ namespace GrasshopperMCP.Models
                 {
                     return typedValue;
                 }
-                
+
                 // Try to convert
                 try
                 {
@@ -59,7 +59,7 @@ namespace GrasshopperMCP.Models
                     {
                         return jObject.ToObject<T>();
                     }
-                    
+
                     // If it's a Newtonsoft.Json.Linq.JArray, try to convert
                     if (value is Newtonsoft.Json.Linq.JArray jArray)
                     {
@@ -67,7 +67,7 @@ namespace GrasshopperMCP.Models
                     }
                 }
             }
-            
+
             // If unable to get or convert parameter, return default value
             return default;
         }

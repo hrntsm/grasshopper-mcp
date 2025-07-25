@@ -1,5 +1,3 @@
-using System;
-
 namespace GH_MCP.Models
 {
     /// <summary>
@@ -27,7 +25,7 @@ namespace GH_MCP.Models
         /// </summary>
         public bool IsValid()
         {
-            return !string.IsNullOrEmpty(ComponentId) && 
+            return !string.IsNullOrEmpty(ComponentId) &&
                    (!string.IsNullOrEmpty(ParameterName) || ParameterIndex.HasValue);
         }
     }

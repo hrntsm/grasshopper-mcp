@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using GrasshopperMCP.Models;
-using Grasshopper.Kernel;
 using Rhino;
 using System.Linq;
 using System.Threading;
@@ -23,7 +21,7 @@ namespace GrasshopperMCP.Commands
         {
             object result = null;
             Exception exception = null;
-            
+
             // 在 UI 線程上執行
             RhinoApp.InvokeOnUiThread(new Action(() =>
             {
@@ -35,7 +33,7 @@ namespace GrasshopperMCP.Commands
                     {
                         throw new InvalidOperationException("No active Grasshopper document");
                     }
-                    
+
                     // 收集組件信息
                     var components = new List<object>();
                     foreach (var obj in doc.Objects)
@@ -46,10 +44,10 @@ namespace GrasshopperMCP.Commands
                             { "type", obj.GetType().Name },
                             { "name", obj.NickName }
                         };
-                        
+
                         components.Add(componentInfo);
                     }
-                    
+
                     // 收集文檔信息
                     var docInfo = new Dictionary<string, object>
                     {
@@ -58,7 +56,7 @@ namespace GrasshopperMCP.Commands
                         { "componentCount", doc.Objects.Count },
                         { "components", components }
                     };
-                    
+
                     result = docInfo;
                 }
                 catch (Exception ex)
@@ -67,22 +65,22 @@ namespace GrasshopperMCP.Commands
                     RhinoApp.WriteLine($"Error in GetDocumentInfo: {ex.Message}");
                 }
             }));
-            
+
             // 等待 UI 線程操作完成
             while (result == null && exception == null)
             {
                 Thread.Sleep(10);
             }
-            
+
             // 如果有異常，拋出
             if (exception != null)
             {
                 throw exception;
             }
-            
+
             return result;
         }
-        
+
         /// <summary>
         /// 清空文檔
         /// </summary>
@@ -92,7 +90,7 @@ namespace GrasshopperMCP.Commands
         {
             object result = null;
             Exception exception = null;
-            
+
             // 在 UI 線程上執行
             RhinoApp.InvokeOnUiThread(new Action(() =>
             {
@@ -104,15 +102,15 @@ namespace GrasshopperMCP.Commands
                     {
                         throw new InvalidOperationException("No active Grasshopper document");
                     }
-                    
+
                     // 創建一個新的文檔對象列表，避免在遍歷時修改集合
                     var objectsToRemove = doc.Objects.ToList();
-                    
+
                     // 過濾掉必要的元件（保留那些用於與 Claude Desktop 通信的元件）
                     // 這裡我們可以通過 GUID、名稱或類型來識別必要的元件
-                    var essentialComponents = objectsToRemove.Where(obj => 
+                    var essentialComponents = objectsToRemove.Where(obj =>
                         // 檢查元件的名稱是否包含特定關鍵字
-                        obj.NickName.Contains("MCP") || 
+                        obj.NickName.Contains("MCP") ||
                         obj.NickName.Contains("Claude") ||
                         // 或者檢查元件的類型
                         obj.GetType().Name.Contains("GH_MCP") ||
@@ -127,19 +125,19 @@ namespace GrasshopperMCP.Commands
                         obj.NickName.Contains("Status") ||
                         obj.NickName.Contains("Panel")
                     ).ToList();
-                    
+
                     // 從要刪除的列表中移除必要的元件
                     foreach (var component in essentialComponents)
                     {
                         objectsToRemove.Remove(component);
                     }
-                    
+
                     // 清空文檔（只刪除非必要的元件）
                     doc.RemoveObjects(objectsToRemove, false);
-                    
+
                     // 刷新畫布
                     doc.NewSolution(false);
-                    
+
                     // 返回操作結果
                     result = new
                     {
@@ -153,22 +151,22 @@ namespace GrasshopperMCP.Commands
                     RhinoApp.WriteLine($"Error in ClearDocument: {ex.Message}");
                 }
             }));
-            
+
             // 等待 UI 線程操作完成
             while (result == null && exception == null)
             {
                 Thread.Sleep(10);
             }
-            
+
             // 如果有異常，拋出
             if (exception != null)
             {
                 throw exception;
             }
-            
+
             return result;
         }
-        
+
         /// <summary>
         /// 保存文檔
         /// </summary>
@@ -181,7 +179,7 @@ namespace GrasshopperMCP.Commands
             {
                 throw new ArgumentException("Save path is required");
             }
-            
+
             // 返回一個錯誤信息，表示該功能暫時不可用
             return new
             {
@@ -189,7 +187,7 @@ namespace GrasshopperMCP.Commands
                 message = "SaveDocument is temporarily disabled due to API compatibility issues. Please save the document manually."
             };
         }
-        
+
         /// <summary>
         /// 加載文檔
         /// </summary>
@@ -202,7 +200,7 @@ namespace GrasshopperMCP.Commands
             {
                 throw new ArgumentException("Load path is required");
             }
-            
+
             // 返回一個錯誤信息，表示該功能暫時不可用
             return new
             {
