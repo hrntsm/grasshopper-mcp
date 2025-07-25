@@ -1,0 +1,362 @@
+{
+  "title": "Grasshopper Component Guide",
+  "description": "Guide for creating and connecting Grasshopper components",
+  "components": [
+    {
+      "name": "Point",
+      "category": "Params",
+      "description": "Creates a point at specific coordinates",
+      "inputs": [
+        {
+          "name": "X",
+          "type": "Number"
+        },
+        {
+          "name": "Y",
+          "type": "Number"
+        },
+        {
+          "name": "Z",
+          "type": "Number"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Pt",
+          "type": "Point"
+        }
+      ]
+    },
+    {
+      "name": "Circle",
+      "category": "Curve",
+      "description": "Creates a circle",
+      "inputs": [
+        {
+          "name": "Plane",
+          "type": "Plane",
+          "description": "Base plane for the circle"
+        },
+        {
+          "name": "Radius",
+          "type": "Number",
+          "description": "Circle radius"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "C",
+          "type": "Circle"
+        }
+      ]
+    },
+    {
+      "name": "XY Plane",
+      "category": "Vector",
+      "description": "Creates an XY plane at the world origin or at a specified point",
+      "inputs": [
+        {
+          "name": "Origin",
+          "type": "Point",
+          "description": "Origin point",
+          "optional": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Plane",
+          "type": "Plane",
+          "description": "XY plane"
+        }
+      ]
+    },
+    {
+      "name": "Addition",
+      "fullName": "Addition",
+      "description": "Adds two or more numbers",
+      "inputs": [
+        {
+          "name": "A",
+          "type": "Number",
+          "description": "First input value"
+        },
+        {
+          "name": "B",
+          "type": "Number",
+          "description": "Second input value"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Result",
+          "type": "Number",
+          "description": "Sum of inputs"
+        }
+      ],
+      "usage_examples": [
+        "Connect two Number Sliders to inputs A and B to add their values",
+        "Connect multiple values to add them all together"
+      ],
+      "common_issues": [
+        "When connecting multiple sliders, ensure they connect to different inputs (A and B)",
+        "The first slider should connect to input A, the second to input B"
+      ]
+    },
+    {
+      "name": "Number Slider",
+      "fullName": "Number Slider",
+      "description": "Creates a slider for numeric input with adjustable range and precision",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "N",
+          "type": "Number",
+          "description": "Number output"
+        }
+      ],
+      "settings": {
+        "min": {
+          "description": "Minimum value of the slider",
+          "default": 0
+        },
+        "max": {
+          "description": "Maximum value of the slider",
+          "default": 10
+        },
+        "value": {
+          "description": "Current value of the slider",
+          "default": 5
+        },
+        "rounding": {
+          "description": "Rounding precision (0.01, 0.1, 1, etc.)",
+          "default": 0.1
+        },
+        "type": {
+          "description": "Slider type (integer, floating point)",
+          "default": "float"
+        },
+        "name": {
+          "description": "Custom name for the slider",
+          "default": ""
+        }
+      },
+      "usage_examples": [
+        "Create a Number Slider with min=0, max=100, value=50",
+        "Create a Number Slider for radius with min=0.1, max=10, value=2.5, rounding=0.1"
+      ],
+      "common_issues": [
+        "Confusing with other slider types",
+        "Not setting appropriate min/max values for the intended use"
+      ],
+      "disambiguation": {
+        "similar_components": [
+          {
+            "name": "MD Slider",
+            "description": "Multi-dimensional slider for vector input, NOT for simple numeric values",
+            "how_to_distinguish": "Use Number Slider for single numeric values; use MD Slider only when you need multi-dimensional control"
+          },
+          {
+            "name": "Graph Mapper",
+            "description": "Maps values through a graph function, NOT a simple slider",
+            "how_to_distinguish": "Use Number Slider for direct numeric input; use Graph Mapper only for function-based mapping"
+          }
+        ],
+        "correct_usage": "When needing a simple numeric input control, ALWAYS use 'Number Slider', not MD Slider or other variants"
+      }
+    },
+    {
+      "name": "Panel",
+      "fullName": "Panel",
+      "description": "Displays text or numeric data",
+      "inputs": [
+        {
+          "name": "Input",
+          "type": "Any"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "name": "Math",
+      "fullName": "Mathematics",
+      "description": "Performs mathematical operations",
+      "inputs": [
+        {
+          "name": "A",
+          "type": "Number"
+        },
+        {
+          "name": "B",
+          "type": "Number"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Result",
+          "type": "Number"
+        }
+      ],
+      "operations": [
+        "Addition",
+        "Subtraction",
+        "Multiplication",
+        "Division",
+        "Power",
+        "Modulo"
+      ]
+    },
+    {
+      "name": "Construct Point",
+      "fullName": "Construct Point",
+      "description": "Constructs a point from X, Y, Z coordinates",
+      "inputs": [
+        {
+          "name": "X",
+          "type": "Number"
+        },
+        {
+          "name": "Y",
+          "type": "Number"
+        },
+        {
+          "name": "Z",
+          "type": "Number"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Pt",
+          "type": "Point"
+        }
+      ]
+    },
+    {
+      "name": "Line",
+      "fullName": "Line",
+      "description": "Creates a line between two points",
+      "inputs": [
+        {
+          "name": "Start",
+          "type": "Point"
+        },
+        {
+          "name": "End",
+          "type": "Point"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "L",
+          "type": "Line"
+        }
+      ]
+    },
+    {
+      "name": "Extrude",
+      "fullName": "Extrude",
+      "description": "Extrudes a curve to create a surface or a solid",
+      "inputs": [
+        {
+          "name": "Base",
+          "type": "Curve"
+        },
+        {
+          "name": "Direction",
+          "type": "Vector"
+        },
+        {
+          "name": "Height",
+          "type": "Number"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Brep",
+          "type": "Brep"
+        }
+      ]
+    }
+  ],
+  "connectionRules": [
+    {
+      "from": "Number",
+      "to": "Circle.Radius",
+      "description": "Connect a number to the radius input of a circle"
+    },
+    {
+      "from": "Point",
+      "to": "Circle.Plane",
+      "description": "Connect a point to the plane input of a circle (not recommended, use XY Plane instead)"
+    },
+    {
+      "from": "XY Plane",
+      "to": "Circle.Plane",
+      "description": "Connect an XY Plane to the plane input of a circle (recommended)"
+    },
+    {
+      "from": "Number",
+      "to": "Math.A",
+      "description": "Connect a number to the first input of a Math component"
+    },
+    {
+      "from": "Number",
+      "to": "Math.B",
+      "description": "Connect a number to the second input of a Math component"
+    },
+    {
+      "from": "Number",
+      "to": "Construct Point.X",
+      "description": "Connect a number to the X input of a Construct Point component"
+    },
+    {
+      "from": "Number",
+      "to": "Construct Point.Y",
+      "description": "Connect a number to the Y input of a Construct Point component"
+    },
+    {
+      "from": "Number",
+      "to": "Construct Point.Z",
+      "description": "Connect a number to the Z input of a Construct Point component"
+    },
+    {
+      "from": "Point",
+      "to": "Line.Start",
+      "description": "Connect a point to the start input of a Line component"
+    },
+    {
+      "from": "Point",
+      "to": "Line.End",
+      "description": "Connect a point to the end input of a Line component"
+    },
+    {
+      "from": "Circle",
+      "to": "Extrude.Base",
+      "description": "Connect a circle to the base input of an Extrude component"
+    },
+    {
+      "from": "Number",
+      "to": "Extrude.Height",
+      "description": "Connect a number to the height input of an Extrude component"
+    }
+  ],
+  "commonIssues": [
+    "Using Point component instead of XY Plane for inputs that require planes",
+    "Not specifying parameter names when connecting components",
+    "Using incorrect component names (e.g., 'addition' instead of 'Math' with Addition operation)",
+    "Trying to connect incompatible data types",
+    "Not providing all required inputs for a component",
+    "Using incorrect parameter names (e.g., 'A' and 'B' for Math component instead of the actual parameter names)",
+    "Not checking if a connection was successful before proceeding"
+  ],
+  "tips": [
+    "Always use XY Plane component for plane inputs",
+    "Specify parameter names when connecting components",
+    "For Circle components, make sure to use the correct inputs (Plane and Radius)",
+    "Test simple connections before creating complex geometry",
+    "Avoid using components that require selection from Rhino",
+    "Use get_component_info to check the actual parameter names of a component",
+    "Use get_connections to verify if connections were established correctly",
+    "Use search_components to find the correct component name before adding it",
+    "Use validate_connection to check if a connection is possible before attempting it"
+  ]
+}

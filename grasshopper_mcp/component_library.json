@@ -1,0 +1,362 @@
+{
+  "categories": [
+    {
+      "name": "Params",
+      "components": [
+        {
+          "name": "Point",
+          "fullName": "Point Parameter",
+          "description": "Creates a point parameter",
+          "inputs": [
+            {
+              "name": "X",
+              "type": "Number",
+              "description": "X coordinate"
+            },
+            {
+              "name": "Y",
+              "type": "Number",
+              "description": "Y coordinate"
+            },
+            {
+              "name": "Z",
+              "type": "Number",
+              "description": "Z coordinate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Pt",
+              "type": "Point",
+              "description": "Point output"
+            }
+          ]
+        },
+        {
+          "name": "Number Slider",
+          "fullName": "Number Slider",
+          "description": "Creates a slider for numeric input with adjustable range and precision",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "N",
+              "type": "Number",
+              "description": "Number output"
+            }
+          ],
+          "settings": {
+            "min": {
+              "description": "Minimum value of the slider",
+              "default": 0
+            },
+            "max": {
+              "description": "Maximum value of the slider",
+              "default": 10
+            },
+            "value": {
+              "description": "Current value of the slider",
+              "default": 5
+            },
+            "rounding": {
+              "description": "Rounding precision (0.01, 0.1, 1, etc.)",
+              "default": 0.1
+            },
+            "type": {
+              "description": "Slider type (integer, floating point)",
+              "default": "float"
+            },
+            "name": {
+              "description": "Custom name for the slider",
+              "default": ""
+            }
+          },
+          "usage_examples": [
+            "Create a Number Slider with min=0, max=100, value=50",
+            "Create a Number Slider for radius with min=0.1, max=10, value=2.5, rounding=0.1"
+          ],
+          "common_issues": [
+            "Confusing with other slider types",
+            "Not setting appropriate min/max values for the intended use"
+          ],
+          "disambiguation": {
+            "similar_components": [
+              {
+                "name": "MD Slider",
+                "description": "Multi-dimensional slider for vector input, NOT for simple numeric values",
+                "how_to_distinguish": "Use Number Slider for single numeric values; use MD Slider only when you need multi-dimensional control"
+              },
+              {
+                "name": "Graph Mapper",
+                "description": "Maps values through a graph function, NOT a simple slider",
+                "how_to_distinguish": "Use Number Slider for direct numeric input; use Graph Mapper only for function-based mapping"
+              }
+            ],
+            "correct_usage": "When needing a simple numeric input control, ALWAYS use 'Number Slider', not MD Slider or other variants"
+          }
+        },
+        {
+          "name": "Panel",
+          "fullName": "Panel",
+          "description": "Displays text or numeric data",
+          "inputs": [
+            {
+              "name": "Input",
+              "type": "Any",
+              "description": "Any input data"
+            }
+          ],
+          "outputs": []
+        }
+      ]
+    },
+    {
+      "name": "Maths",
+      "components": [
+        {
+          "name": "Math",
+          "fullName": "Mathematics",
+          "description": "Performs mathematical operations",
+          "inputs": [
+            {
+              "name": "A",
+              "type": "Number",
+              "description": "First number"
+            },
+            {
+              "name": "B",
+              "type": "Number",
+              "description": "Second number"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Result",
+              "type": "Number",
+              "description": "Result of the operation"
+            }
+          ],
+          "operations": [
+            "Addition",
+            "Subtraction",
+            "Multiplication",
+            "Division",
+            "Power",
+            "Modulo"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vector",
+      "components": [
+        {
+          "name": "XY Plane",
+          "fullName": "XY Plane",
+          "description": "Creates an XY plane at the world origin or at a specified point",
+          "inputs": [
+            {
+              "name": "Origin",
+              "type": "Point",
+              "description": "Origin point",
+              "optional": true
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Plane",
+              "type": "Plane",
+              "description": "XY plane"
+            }
+          ]
+        },
+        {
+          "name": "Construct Point",
+          "fullName": "Construct Point",
+          "description": "Constructs a point from X, Y, Z coordinates",
+          "inputs": [
+            {
+              "name": "X",
+              "type": "Number",
+              "description": "X coordinate"
+            },
+            {
+              "name": "Y",
+              "type": "Number",
+              "description": "Y coordinate"
+            },
+            {
+              "name": "Z",
+              "type": "Number",
+              "description": "Z coordinate"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Pt",
+              "type": "Point",
+              "description": "Constructed point"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Curve",
+      "components": [
+        {
+          "name": "Circle",
+          "fullName": "Circle",
+          "description": "Creates a circle",
+          "inputs": [
+            {
+              "name": "Plane",
+              "type": "Plane",
+              "description": "Base plane for the circle"
+            },
+            {
+              "name": "Radius",
+              "type": "Number",
+              "description": "Circle radius"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "C",
+              "type": "Circle",
+              "description": "Circle output"
+            }
+          ]
+        },
+        {
+          "name": "Line",
+          "fullName": "Line",
+          "description": "Creates a line between two points",
+          "inputs": [
+            {
+              "name": "Start",
+              "type": "Point",
+              "description": "Start point"
+            },
+            {
+              "name": "End",
+              "type": "Point",
+              "description": "End point"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "L",
+              "type": "Line",
+              "description": "Line output"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Surface",
+      "components": [
+        {
+          "name": "Extrude",
+          "fullName": "Extrude",
+          "description": "Extrudes a curve to create a surface or a solid",
+          "inputs": [
+            {
+              "name": "Base",
+              "type": "Curve",
+              "description": "Base curve to extrude"
+            },
+            {
+              "name": "Direction",
+              "type": "Vector",
+              "description": "Direction of extrusion",
+              "optional": true
+            },
+            {
+              "name": "Height",
+              "type": "Number",
+              "description": "Height of extrusion"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "Brep",
+              "type": "Brep",
+              "description": "Extruded brep"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dataTypes": [
+    {
+      "name": "Number",
+      "description": "A numeric value",
+      "compatibleWith": [
+        "Number",
+        "Integer",
+        "Double"
+      ]
+    },
+    {
+      "name": "Point",
+      "description": "A 3D point in space",
+      "compatibleWith": [
+        "Point3d",
+        "Point"
+      ]
+    },
+    {
+      "name": "Vector",
+      "description": "A 3D vector",
+      "compatibleWith": [
+        "Vector3d",
+        "Vector"
+      ]
+    },
+    {
+      "name": "Plane",
+      "description": "A plane in 3D space",
+      "compatibleWith": [
+        "Plane"
+      ]
+    },
+    {
+      "name": "Circle",
+      "description": "A circle curve",
+      "compatibleWith": [
+        "Circle",
+        "Curve"
+      ]
+    },
+    {
+      "name": "Line",
+      "description": "A line segment",
+      "compatibleWith": [
+        "Line",
+        "Curve"
+      ]
+    },
+    {
+      "name": "Curve",
+      "description": "A curve object",
+      "compatibleWith": [
+        "Curve",
+        "Circle",
+        "Line",
+        "Arc",
+        "Polyline"
+      ]
+    },
+    {
+      "name": "Brep",
+      "description": "A boundary representation object",
+      "compatibleWith": [
+        "Brep",
+        "Surface",
+        "Solid"
+      ]
+    }
+  ]
+}
