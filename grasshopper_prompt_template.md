@@ -14,6 +14,7 @@ When you need to create and connect components in Grasshopper, please generate c
 ```
 
 ### Important Notes:
+
 - For components that require plane input (such as Box, Circle, Rectangle, etc.), always use "xy plane" as the plane source, not Point components
 - Use standardized component names such as "xy plane", "box", "circle", "number slider", etc.
 - Coordinate values should be numbers, recommend using grid layout (spacing of about 200-300 units between x and y)
@@ -31,6 +32,7 @@ When you need to create and connect components in Grasshopper, please generate c
 ```
 
 ### Important Notes:
+
 - Use standardized parameter names such as "Plane", "Base", "Radius", "X Size", "Y Size", "Z Size", "Number", etc.
 - Ensure all components are created first, then perform connections
 - For connections from plane to geometry components, source parameter should be "Plane", target parameter should be "Base" or "Plane"
@@ -120,14 +122,17 @@ The following is the complete command sequence for creating a cube:
 ## Common Errors and Solutions
 
 1. **Using Point component instead of XY Plane**:
+
    - Error: Using Point component as plane input source
    - Solution: Always use XY Plane component as plane input source
 
 2. **Incorrect parameter names**:
+
    - Error: Using non-standard parameter names, such as "radius" instead of "Radius"
    - Solution: Use standardized parameter names with capitalized first letters
 
 3. **Incorrect connection order**:
+
    - Error: Attempting to connect before creating all components
    - Solution: Create all components first, then perform connections
 
