@@ -422,7 +422,7 @@ def get_all_components():
 
                 # Special handling for certain component types
                 if component_type == "Number Slider":
-                    # 嘗試獲取滑桿的當前設置
+                    # Try to get the current slider settings
                     component_info = send_to_grasshopper(
                         "get_component_info", {"componentId": component_id}
                     )
@@ -508,22 +508,22 @@ def validate_connection(
     return send_to_grasshopper("validate_connection", params)
 
 
-# 註冊 MCP 資源
+# Register MCP resources
 @server.resource("grasshopper://status")
 def get_grasshopper_status():
     """Get Grasshopper status"""
     try:
-        # 獲取文檔信息
+        # Get document information
         doc_info = send_to_grasshopper("get_document_info")
 
-        # 獲取所有組件（使用增強版的 get_all_components）
+        # Get all components (using enhanced get_all_components)
         components_result = get_all_components()
         components = components_result.get("result", []) if components_result else []
 
-        # 獲取所有連接
+        # Get all connections
         connections = send_to_grasshopper("get_connections")
 
-        # 添加常用組件的提示信息
+        # Add hint information for common components
         component_hints = {
             "Number Slider": {
                 "description": "Single numeric value slider with adjustable range",
@@ -548,7 +548,7 @@ def get_grasshopper_status():
             },
         }
 
-        # 為每個組件添加當前參數值的摘要
+        # Add summary of current parameter values for each component
         component_summaries = []
         for component in components:
             summary = {
@@ -557,11 +557,11 @@ def get_grasshopper_status():
                 "position": {"x": component.get("x", 0), "y": component.get("y", 0)},
             }
 
-            # 添加組件特定的參數信息
+            # Add component-specific parameter information
             if "currentSettings" in component:
                 summary["settings"] = component["currentSettings"]
             elif component.get("type") == "Number Slider":
-                # 嘗試從組件信息中提取滑桿設置
+                # Try to extract slider settings from component information
                 summary["settings"] = {
                     "min": component.get("min", 0),
                     "max": component.get("max", 10),
@@ -569,7 +569,7 @@ def get_grasshopper_status():
                     "rounding": component.get("rounding", 0.1),
                 }
 
-            # 添加連接信息摘要
+            # Add connection information summary
             if "connections" in component:
                 conn_summary = []
                 for conn in component["connections"]:
@@ -899,7 +899,7 @@ def get_component_guide():
 @server.resource("grasshopper://component_library")
 def get_component_library():
     """Get a comprehensive library of Grasshopper components"""
-    # 這個資源提供了一個更全面的組件庫，包括常用組件的詳細信息
+    # This resource provides a more comprehensive component library with detailed information for common components
     return {
         "categories": [
             {
@@ -1235,7 +1235,7 @@ def get_component_library():
 def main():
     """Main entry point for the Grasshopper MCP Bridge Server"""
     try:
-        # 啟動 MCP 服務器
+        # Start MCP server
         print("Starting Grasshopper MCP Bridge Server...", file=sys.stderr)
         print("Please add this MCP server to Claude Desktop", file=sys.stderr)
         server.run()

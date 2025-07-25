@@ -12,27 +12,27 @@ using Newtonsoft.Json;
 namespace GH_MCP.Commands
 {
     /// <summary>
-    /// 處理高層次意圖命令的處理器
+    /// Handler for high-level intent commands
     /// </summary>
     public class IntentCommandHandler
     {
         private static Dictionary<string, string> _componentIdMap = new Dictionary<string, string>();
 
         /// <summary>
-        /// 處理創建模式命令
+        /// Handle create pattern command
         /// </summary>
-        /// <param name="command">命令對象</param>
-        /// <returns>命令執行結果</returns>
+        /// <param name="command">Command object</param>
+        /// <returns>Command execution result</returns>
         public static object CreatePattern(Command command)
         {
-            // 獲取模式名稱或描述
+            // Get pattern name or description
             if (!command.Parameters.TryGetValue("description", out object descriptionObj) || descriptionObj == null)
             {
                 return Response.CreateError("Missing required parameter: description");
             }
             string description = descriptionObj.ToString();
 
-            // 識別意圖
+            // Recognize intent
             string patternName = IntentRecognizer.RecognizeIntent(description);
             if (string.IsNullOrEmpty(patternName))
             {
@@ -41,22 +41,22 @@ namespace GH_MCP.Commands
 
             RhinoApp.WriteLine($"Recognized intent: {patternName}");
 
-            // 獲取模式詳細信息
+            // Get pattern details
             var (components, connections) = IntentRecognizer.GetPatternDetails(patternName);
             if (components.Count == 0)
             {
                 return Response.CreateError($"Pattern '{patternName}' has no components defined");
             }
 
-            // 清空組件 ID 映射
+            // Clear component ID mapping
             _componentIdMap.Clear();
 
-            // 創建所有組件
+            // Create all components
             foreach (var component in components)
             {
                 try
                 {
-                    // 創建組件命令
+                    // Create component command
                     var addCommand = new Command(
                         "add_component",
                         new Dictionary<string, object>
@@ -67,7 +67,7 @@ namespace GH_MCP.Commands
                         }
                     );
 
-                    // 如果有設置，添加設置
+                    // If settings exist, add settings
                     if (component.Settings != null)
                     {
                         foreach (var setting in component.Settings)
@@ -76,11 +76,11 @@ namespace GH_MCP.Commands
                         }
                     }
 
-                    // 執行添加組件命令
+                    // Execute add component command
                     var result = ComponentCommandHandler.AddComponent(addCommand);
                     if (result is Response response && response.Success && response.Data != null)
                     {
-                        // 保存組件 ID 映射
+                        // Save component ID mapping
                         string componentId = response.Data.ToString();
                         _componentIdMap[component.Id] = componentId;
                         RhinoApp.WriteLine($"Created component {component.Type} with ID {componentId}");
@@ -95,16 +95,16 @@ namespace GH_MCP.Commands
                     RhinoApp.WriteLine($"Error creating component {component.Type}: {ex.Message}");
                 }
 
-                // 添加短暫延遲，確保組件創建完成
+                // Add short delay to ensure component creation is complete
                 Thread.Sleep(100);
             }
 
-            // 創建所有連接
+            // Create all connections
             foreach (var connection in connections)
             {
                 try
                 {
-                    // 檢查源和目標組件 ID 是否存在
+                    // Check if source and target component IDs exist
                     if (!_componentIdMap.TryGetValue(connection.SourceId, out string sourceId) ||
                         !_componentIdMap.TryGetValue(connection.TargetId, out string targetId))
                     {
@@ -112,7 +112,7 @@ namespace GH_MCP.Commands
                         continue;
                     }
 
-                    // 創建連接命令
+                    // Create connection command
                     var connectCommand = new Command(
                         "connect_components",
                         new Dictionary<string, object>
@@ -124,7 +124,7 @@ namespace GH_MCP.Commands
                         }
                     );
 
-                    // 執行連接命令
+                    // Execute connection command
                     var result = ConnectionCommandHandler.ConnectComponents(connectCommand);
                     if (result is Response response && response.Success)
                     {
@@ -140,11 +140,11 @@ namespace GH_MCP.Commands
                     RhinoApp.WriteLine($"Error creating connection: {ex.Message}");
                 }
 
-                // 添加短暫延遲，確保連接創建完成
+                // Add short delay to ensure connection creation is complete
                 Thread.Sleep(100);
             }
 
-            // 返回成功結果
+            // Return success result
             return Response.Ok(new
             {
                 Pattern = patternName,
@@ -154,16 +154,16 @@ namespace GH_MCP.Commands
         }
 
         /// <summary>
-        /// 獲取可用的模式列表
+        /// Get list of available patterns
         /// </summary>
-        /// <param name="command">命令對象</param>
-        /// <returns>命令執行結果</returns>
+        /// <param name="command">Command object</param>
+        /// <returns>Command execution result</returns>
         public static object GetAvailablePatterns(Command command)
         {
-            // 初始化意圖識別器
+            // Initialize intent recognizer
             IntentRecognizer.Initialize();
 
-            // 獲取所有可用的模式
+            // Get all available patterns
             var patterns = new List<string>();
             if (command.Parameters.TryGetValue("query", out object queryObj) && queryObj != null)
             {
@@ -176,12 +176,12 @@ namespace GH_MCP.Commands
             }
             else
             {
-                // 如果沒有查詢，返回所有模式
-                // 這裡需要擴展 IntentRecognizer 以支持獲取所有模式
-                // 暫時返回空列表
+                // If no query provided, return all patterns
+                // Need to extend IntentRecognizer to support getting all patterns
+                // Return empty list for now
             }
 
-            // 返回成功結果
+            // Return success result
             return Response.Ok(patterns);
         }
     }

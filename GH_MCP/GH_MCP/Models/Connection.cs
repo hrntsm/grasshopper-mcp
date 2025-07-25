@@ -1,27 +1,27 @@
 namespace GH_MCP.Models
 {
     /// <summary>
-    /// 表示一個組件連接端點
+    /// Represents a component connection endpoint
     /// </summary>
     public class Connection
     {
         /// <summary>
-        /// 組件的 GUID
+        /// Component GUID
         /// </summary>
         public string ComponentId { get; set; }
 
         /// <summary>
-        /// 參數名稱（輸入或輸出參數）
+        /// Parameter name (input or output parameter)
         /// </summary>
         public string ParameterName { get; set; }
 
         /// <summary>
-        /// 參數索引（如果未指定名稱，則使用索引）
+        /// Parameter index (use index if name is not specified)
         /// </summary>
         public int? ParameterIndex { get; set; }
 
         /// <summary>
-        /// 檢查連接是否有效
+        /// Check if connection is valid
         /// </summary>
         public bool IsValid()
         {
@@ -31,22 +31,22 @@ namespace GH_MCP.Models
     }
 
     /// <summary>
-    /// 表示兩個組件之間的連接
+    /// Represents a connection between two components
     /// </summary>
     public class ConnectionPairing
     {
         /// <summary>
-        /// 源組件連接（輸出端）
+        /// Source component connection (output endpoint)
         /// </summary>
         public Connection Source { get; set; }
 
         /// <summary>
-        /// 目標組件連接（輸入端）
+        /// Target component connection (input endpoint)
         /// </summary>
         public Connection Target { get; set; }
 
         /// <summary>
-        /// 檢查連接配對是否有效
+        /// Check if connection pairing is valid
         /// </summary>
         public bool IsValid()
         {
