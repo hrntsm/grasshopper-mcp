@@ -15,15 +15,15 @@ using GH_MCP.Utils;
 namespace GrasshopperMCP.Commands
 {
     /// <summary>
-    /// 處理組件相關命令的處理器
+    /// Handler for component-related commands
     /// </summary>
     public static class ComponentCommandHandler
     {
         /// <summary>
-        /// 添加組件
+        /// Add component
         /// </summary>
-        /// <param name="command">包含組件類型和位置的命令</param>
-        /// <returns>添加的組件信息</returns>
+        /// <param name="command">Command containing component type and position</param>
+        /// <returns>Information about the added component</returns>
         public static object AddComponent(Command command)
         {
             string type = command.GetParameter<string>("type");
@@ -35,31 +35,31 @@ namespace GrasshopperMCP.Commands
                 throw new ArgumentException("Component type is required");
             }
             
-            // 使用模糊匹配獲取標準化的元件名稱
+            // Use fuzzy matching to get normalized component name
             string normalizedType = FuzzyMatcher.GetClosestComponentName(type);
             
-            // 記錄請求信息
+            // Log request information
             RhinoApp.WriteLine($"AddComponent request: type={type}, normalized={normalizedType}, x={x}, y={y}");
             
             object result = null;
             Exception exception = null;
             
-            // 在 UI 線程上執行
+            // Execute on UI thread
             RhinoApp.InvokeOnUiThread(new Action(() =>
             {
                 try
                 {
-                    // 獲取 Grasshopper 文檔
+                    // Get Grasshopper document
                     var doc = Grasshopper.Instances.ActiveCanvas?.Document;
                     if (doc == null)
                     {
                         throw new InvalidOperationException("No active Grasshopper document");
                     }
                     
-                    // 創建組件
+                    // Create component
                     IGH_DocumentObject component = null;
                     
-                    // 記錄可用的組件類型（僅在第一次調用時記錄）
+                    // Log available component types (only logged on first call)
                     bool loggedComponentTypes = false;
                     if (!loggedComponentTypes)
                     {
@@ -72,10 +72,10 @@ namespace GrasshopperMCP.Commands
                         loggedComponentTypes = true;
                     }
                     
-                    // 根據類型創建不同的組件
+                    // Create different components based on type
                     switch (normalizedType.ToLowerInvariant())
                     {
-                        // 平面元件
+                        // Plane components
                         case "xy plane":
                             component = CreateComponentByName("XY Plane");
                             break;
@@ -89,7 +89,7 @@ namespace GrasshopperMCP.Commands
                             component = CreateComponentByName("Plane 3Pt");
                             break;
                             
-                        // 基本幾何元件
+                        // Basic geometry components
                         case "box":
                             component = CreateComponentByName("Box");
                             break;
@@ -112,7 +112,7 @@ namespace GrasshopperMCP.Commands
                             component = CreateComponentByName("Line");
                             break;
                             
-                        // 參數元件
+                        // Parameter components
                         case "point":
                         case "pt":
                         case "pointparam":
@@ -224,7 +224,7 @@ namespace GrasshopperMCP.Commands
                             break;
                     }
                     
-                    // 設置組件位置
+                    // Set component position
                     if (component != null)
                     {
                         // 確保組件有有效的屬性對象
@@ -265,13 +265,13 @@ namespace GrasshopperMCP.Commands
                 }
             }));
             
-            // 等待 UI 線程操作完成
+            // Wait for UI thread operation to complete
             while (result == null && exception == null)
             {
                 Thread.Sleep(10);
             }
             
-            // 如果有異常，拋出
+            // If there's an exception, throw it
             if (exception != null)
             {
                 throw exception;
@@ -281,10 +281,10 @@ namespace GrasshopperMCP.Commands
         }
         
         /// <summary>
-        /// 連接組件
+        /// Connect components
         /// </summary>
-        /// <param name="command">包含源和目標組件信息的命令</param>
-        /// <returns>連接信息</returns>
+        /// <param name="command">Command containing source and target component information</param>
+        /// <returns>Connection information</returns>
         public static object ConnectComponents(Command command)
         {
             var fromData = command.GetParameter<Dictionary<string, object>>("from");
@@ -298,12 +298,12 @@ namespace GrasshopperMCP.Commands
             object result = null;
             Exception exception = null;
             
-            // 在 UI 線程上執行
+            // Execute on UI thread
             RhinoApp.InvokeOnUiThread(new Action(() =>
             {
                 try
                 {
-                    // 獲取 Grasshopper 文檔
+                    // Get Grasshopper document
                     var doc = Grasshopper.Instances.ActiveCanvas?.Document;
                     if (doc == null)
                     {
@@ -391,13 +391,13 @@ namespace GrasshopperMCP.Commands
                 }
             }));
             
-            // 等待 UI 線程操作完成
+            // Wait for UI thread operation to complete
             while (result == null && exception == null)
             {
                 Thread.Sleep(10);
             }
             
-            // 如果有異常，拋出
+            // If there's an exception, throw it
             if (exception != null)
             {
                 throw exception;
@@ -407,10 +407,10 @@ namespace GrasshopperMCP.Commands
         }
         
         /// <summary>
-        /// 設置組件值
+        /// Set component value
         /// </summary>
-        /// <param name="command">包含組件 ID 和值的命令</param>
-        /// <returns>操作結果</returns>
+        /// <param name="command">Command containing component ID and value</param>
+        /// <returns>Operation result</returns>
         public static object SetComponentValue(Command command)
         {
             string idStr = command.GetParameter<string>("id");
@@ -424,12 +424,12 @@ namespace GrasshopperMCP.Commands
             object result = null;
             Exception exception = null;
             
-            // 在 UI 線程上執行
+            // Execute on UI thread
             RhinoApp.InvokeOnUiThread(new Action(() =>
             {
                 try
                 {
-                    // 獲取 Grasshopper 文檔
+                    // Get Grasshopper document
                     var doc = Grasshopper.Instances.ActiveCanvas?.Document;
                     if (doc == null)
                     {
@@ -524,13 +524,13 @@ namespace GrasshopperMCP.Commands
                 }
             }));
             
-            // 等待 UI 線程操作完成
+            // Wait for UI thread operation to complete
             while (result == null && exception == null)
             {
                 Thread.Sleep(10);
             }
             
-            // 如果有異常，拋出
+            // If there's an exception, throw it
             if (exception != null)
             {
                 throw exception;
@@ -540,10 +540,10 @@ namespace GrasshopperMCP.Commands
         }
         
         /// <summary>
-        /// 獲取組件信息
+        /// Get component information
         /// </summary>
-        /// <param name="command">包含組件 ID 的命令</param>
-        /// <returns>組件信息</returns>
+        /// <param name="command">Command containing component ID</param>
+        /// <returns>Component information</returns>
         public static object GetComponentInfo(Command command)
         {
             string idStr = command.GetParameter<string>("id");
@@ -556,12 +556,12 @@ namespace GrasshopperMCP.Commands
             object result = null;
             Exception exception = null;
             
-            // 在 UI 線程上執行
+            // Execute on UI thread
             RhinoApp.InvokeOnUiThread(new Action(() =>
             {
                 try
                 {
-                    // 獲取 Grasshopper 文檔
+                    // Get Grasshopper document
                     var doc = Grasshopper.Instances.ActiveCanvas?.Document;
                     if (doc == null)
                     {
@@ -646,13 +646,13 @@ namespace GrasshopperMCP.Commands
                 }
             }));
             
-            // 等待 UI 線程操作完成
+            // Wait for UI thread operation to complete
             while (result == null && exception == null)
             {
                 Thread.Sleep(10);
             }
             
-            // 如果有異常，拋出
+            // If there's an exception, throw it
             if (exception != null)
             {
                 throw exception;

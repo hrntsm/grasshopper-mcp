@@ -16,7 +16,7 @@ using System.IO;
 namespace GrasshopperMCP
 {
     /// <summary>
-    /// Grasshopper MCP 組件，用於與 Python 伺服器通信
+    /// Grasshopper MCP component for communicating with Python server
     /// </summary>
     public class GrasshopperMCPComponent : GH_Component
     {
@@ -25,7 +25,7 @@ namespace GrasshopperMCP
         private static int grasshopperPort = 8080;
         
         /// <summary>
-        /// 初始化 GrasshopperMCPComponent 類的新實例
+        /// Initializes a new instance of the GrasshopperMCPComponent class
         /// </summary>
         public GrasshopperMCPComponent()
             : base("Grasshopper MCP", "MCP", "Machine Control Protocol for Grasshopper", "Params", "Util")
@@ -33,7 +33,7 @@ namespace GrasshopperMCP
         }
         
         /// <summary>
-        /// 註冊輸入參數
+        /// Register input parameters
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
@@ -42,7 +42,7 @@ namespace GrasshopperMCP
         }
         
         /// <summary>
-        /// 註冊輸出參數
+        /// Register output parameters
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
@@ -51,21 +51,21 @@ namespace GrasshopperMCP
         }
         
         /// <summary>
-        /// 解決組件
+        /// Solve component instance
         /// </summary>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             bool enabled = false;
             int port = grasshopperPort;
             
-            // 獲取輸入參數
+            // Get input parameters
             if (!DA.GetData(0, ref enabled)) return;
             if (!DA.GetData(1, ref port)) return;
             
-            // 更新端口
+            // Update port
             grasshopperPort = port;
             
-            // 根據啟用狀態啟動或停止伺服器
+            // Start or stop server based on enabled state
             if (enabled && !isRunning)
             {
                 Start();
@@ -85,47 +85,47 @@ namespace GrasshopperMCP
                 DA.SetData(0, "Stopped");
             }
             
-            // 設置最後接收的命令
+            // Set last received command
             DA.SetData(1, LastCommand);
         }
         
         /// <summary>
-        /// 組件 GUID
+        /// Component GUID
         /// </summary>
         public override Guid ComponentGuid => new Guid("12345678-1234-1234-1234-123456789012");
         
         /// <summary>
-        /// 暴露圖標
+        /// Component icon
         /// </summary>
         protected override Bitmap Icon => null;
         
         /// <summary>
-        /// 最後接收的命令
+        /// Last received command
         /// </summary>
         public static string LastCommand { get; private set; } = "None";
         
         /// <summary>
-        /// 啟動 MCP 伺服器
+        /// Start MCP server
         /// </summary>
         public static void Start()
         {
             if (isRunning) return;
             
-            // 初始化命令註冊表
+            // Initialize command registry
             GrasshopperCommandRegistry.Initialize();
             
-            // 啟動 TCP 監聽器
+            // Start TCP listener
             isRunning = true;
             listener = new TcpListener(IPAddress.Loopback, grasshopperPort);
             listener.Start();
             RhinoApp.WriteLine($"GrasshopperMCPBridge started on port {grasshopperPort}.");
             
-            // 開始接收連接
+            // Begin accepting connections
             Task.Run(ListenerLoop);
         }
         
         /// <summary>
-        /// 停止 MCP 伺服器
+        /// Stop MCP server
         /// </summary>
         public static void Stop()
         {
@@ -137,7 +137,7 @@ namespace GrasshopperMCP
         }
         
         /// <summary>
-        /// 監聽循環，處理傳入的連接
+        /// Listener loop for handling incoming connections
         /// </summary>
         private static async Task ListenerLoop()
         {
@@ -145,11 +145,11 @@ namespace GrasshopperMCP
             {
                 while (isRunning)
                 {
-                    // 等待客戶端連接
+                    // Wait for client connection
                     var client = await listener.AcceptTcpClientAsync();
                     RhinoApp.WriteLine("GrasshopperMCPBridge: Client connected.");
                     
-                    // 處理客戶端連接
+                    // Handle client connection
                     _ = Task.Run(() => HandleClient(client));
                 }
             }
@@ -164,9 +164,9 @@ namespace GrasshopperMCP
         }
         
         /// <summary>
-        /// 處理客戶端連接
+        /// Handle client connection
         /// </summary>
-        /// <param name="client">TCP 客戶端</param>
+        /// <param name="client">TCP client</param>
         private static async Task HandleClient(TcpClient client)
         {
             using (client)
@@ -176,24 +176,24 @@ namespace GrasshopperMCP
             {
                 try
                 {
-                    // 讀取命令
+                    // Read command
                     string commandJson = await reader.ReadLineAsync();
                     if (string.IsNullOrEmpty(commandJson))
                     {
                         return;
                     }
                     
-                    // 更新最後接收的命令
+                    // Update last received command
                     LastCommand = commandJson;
                     
-                    // 解析命令
+                    // Parse command
                     Command command = JsonConvert.DeserializeObject<Command>(commandJson);
                     RhinoApp.WriteLine($"GrasshopperMCPBridge: Received command: {command.Type}");
                     
-                    // 執行命令
+                    // Execute command
                     Response response = GrasshopperCommandRegistry.ExecuteCommand(command);
                     
-                    // 發送響應
+                    // Send response
                     string responseJson = JsonConvert.SerializeObject(response);
                     await writer.WriteLineAsync(responseJson);
                     
@@ -203,7 +203,7 @@ namespace GrasshopperMCP
                 {
                     RhinoApp.WriteLine($"GrasshopperMCPBridge error handling client: {ex.Message}");
                     
-                    // 發送錯誤響應
+                    // Send error response
                     Response errorResponse = Response.CreateError($"Server error: {ex.Message}");
                     string errorResponseJson = JsonConvert.SerializeObject(errorResponse);
                     await writer.WriteLineAsync(errorResponseJson);

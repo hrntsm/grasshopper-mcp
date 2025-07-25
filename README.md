@@ -32,35 +32,39 @@ The system consists of the following parts:
 1. **Install the Grasshopper MCP Component**
 
    **Method 1: Download the pre-compiled GH_MCP.gha file (Recommended)**
-   
+
    Download the [GH_MCP.gha](https://github.com/alfredatnycu/grasshopper-mcp/raw/master/releases/GH_MCP.gha) file directly from the GitHub repository and copy it to the Grasshopper components folder:
+
    ```
    %APPDATA%\Grasshopper\Libraries\
    ```
 
    **Method 2: Build from source**
-   
+
    If you prefer to build from source, clone the repository and build the C# project using Visual Studio.
 
 2. **Install the Python MCP Bridge Server**
 
    **Method 1: Install from PyPI (Recommended)**
-   
+
    The simplest method is to install directly from PyPI using pip:
+
    ```
    pip install grasshopper-mcp
    ```
-   
+
    **Method 2: Install from GitHub**
-   
+
    You can also install the latest version from GitHub:
+
    ```
    pip install git+https://github.com/alfredatnycu/grasshopper-mcp.git
    ```
-   
+
    **Method 3: Install from Source Code**
-   
+
    If you need to modify the code or develop new features, you can clone the repository and install:
+
    ```
    git clone https://github.com/alfredatnycu/grasshopper-mcp.git
    cd grasshopper-mcp
@@ -68,12 +72,15 @@ The system consists of the following parts:
    ```
 
    **Install a Specific Version**
-   
+
    If you need to install a specific version, you can use:
+
    ```
    pip install grasshopper-mcp==0.1.0
    ```
+
    Or install from a specific GitHub tag:
+
    ```
    pip install git+https://github.com/alfredatnycu/grasshopper-mcp.git@v0.1.0
    ```
@@ -91,32 +98,34 @@ The system consists of the following parts:
 3. **Start the Python MCP Bridge Server**
 
    Open a terminal and run:
+
    ```
    python -m grasshopper_mcp.bridge
    ```
-   
+
    > **Note**: The command `grasshopper-mcp` might not work directly due to Python script path issues. Using `python -m grasshopper_mcp.bridge` is the recommended and more reliable method.
 
 4. **Connect Claude Desktop to the MCP Bridge**
 
    **Method 1: Manual Connection**
-   
+
    In Claude Desktop, connect to the MCP Bridge server using the following settings:
+
    - Protocol: MCP
    - Host: localhost
    - Port: 8080
 
    **Method 2: Configure Claude Desktop to Auto-Start the Bridge**
-   
+
    You can configure Claude Desktop to automatically start the MCP Bridge server by modifying its configuration:
-   
+
    ```json
    "grasshopper": {
      "command": "python",
      "args": ["-m", "grasshopper_mcp.bridge"]
    }
    ```
-   
+
    This configuration tells Claude Desktop to use the command `python -m grasshopper_mcp.bridge` to start the MCP server.
 
 5. **Start Using Grasshopper with Claude Desktop**
@@ -137,16 +146,19 @@ Here are some example commands you can use with Claude Desktop:
 If you encounter issues, check the following:
 
 1. **GH_MCP Component Not Loading**
+
    - Ensure the .gha file is in the correct location
    - In Grasshopper, go to File > Preferences > Libraries and click "Unblock" to unblock new components
    - Restart Rhino and Grasshopper
 
 2. **Bridge Server Won't Start**
+
    - If `grasshopper-mcp` command doesn't work, use `python -m grasshopper_mcp.bridge` instead
    - Ensure all required Python dependencies are installed
    - Check if port 8080 is already in use by another application
 
 3. **Claude Desktop Can't Connect**
+
    - Ensure the bridge server is running
    - Verify you're using the correct connection settings (localhost:8080)
    - Check the console output of the bridge server for any error messages
